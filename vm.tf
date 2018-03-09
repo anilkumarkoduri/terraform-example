@@ -1,7 +1,8 @@
 resource "google_compute_instance" "default" {
-  name         = "test-vm"
-  machine_type = "n1-standard-1"
-  zone         = "europe-west1-b"
+  name                      = "test-vm"
+  machine_type              = "n1-standard-2"
+  zone                      = "europe-west1-b"
+  allow_stopping_for_update = true
 
   boot_disk {
     initialize_params {
@@ -21,4 +22,3 @@ resource "google_compute_instance" "default" {
     ssh-keys = "debian:${file("~/.ssh/id_rsa.pub")}"
   }
 }
-
