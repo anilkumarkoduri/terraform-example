@@ -1,5 +1,5 @@
 resource "google_compute_instance" "default" {
-  name                      = "test-vm"
+  name                      = "test-vm-${count.index}"
   machine_type              = "n1-standard-2"
   zone                      = "europe-west1-b"
   allow_stopping_for_update = true
@@ -11,7 +11,7 @@ resource "google_compute_instance" "default" {
   }
 
   attached_disk {
-    source = "${google_compute_disk.default.name}"
+    source = "${element(google_compute_disk.default.*.name, count.index)}"
   }
 
   network_interface {
@@ -25,10 +25,17 @@ resource "google_compute_instance" "default" {
   metadata {
     ssh-keys = "debian:${file("~/.ssh/id_rsa.pub")}"
   }
+
+  count = "${var.my_counter}"
 }
 
 resource "google_compute_disk" "default" {
-  name = "test-disk"
-  type = "pd-ssd"
-  zone = "europe-west1-b"
+  name  = "test-disk-${count.index}"
+  type  = "pd-ssd"
+  zone  = "europe-west1-b"
+  count = "${var.my_counter}"
+}
+
+variable "my_counter" {
+  default = 1
 }
