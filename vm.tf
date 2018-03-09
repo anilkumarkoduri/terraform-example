@@ -10,6 +10,10 @@ resource "google_compute_instance" "default" {
     }
   }
 
+  attached_disk {
+    source = "${google_compute_disk.default.name}"
+  }
+
   network_interface {
     network = "default"
 
@@ -21,4 +25,10 @@ resource "google_compute_instance" "default" {
   metadata {
     ssh-keys = "debian:${file("~/.ssh/id_rsa.pub")}"
   }
+}
+
+resource "google_compute_disk" "default" {
+  name = "test-disk"
+  type = "pd-ssd"
+  zone = "europe-west1-b"
 }
